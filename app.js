@@ -70,7 +70,7 @@ app.get('/grantDenied', (req, res) => {
 
 app.get('/', (req, res) => {
     if (!req.user) {
-        return res.redirect(`/oauthSignin${req._parsedUrl.search}`);
+        return res.redirect(`/oauthSignin${req._parsedUrl.search ? : req._parsedUrl.search : ""}`);
     } else {
         return res.sendFile(path.join(__dirname, 'public', 'html', 'index.html'));
     }
