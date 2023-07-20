@@ -13,7 +13,7 @@ module.exports = {
     forwardRequestToOnshape: async (apiPath, req, res) => {
         try {
             const normalizedUrl = apiPath.indexOf(onshapeApiUrl) === 0 ? apiPath : `${onshapeApiUrl}/${apiPath}`;
-            console.log(req.user.refreshToken);
+            console.log("Refresh Token:" + req.user.refreshToken);
             const resp = await fetch(normalizedUrl, { headers: { Authorization: `Bearer ${req.user.accessToken}` }});
             const data = await resp.text();
             const contentType = resp.headers.get('Content-Type');
@@ -30,7 +30,7 @@ module.exports = {
 }
 
 const refreshAccessToken = async(user) => {
-    console/log("In refresh token function");
+    console.log("In refresh token function");
     const body = 'grant_type=refresh_token&refresh_token=' + user.refreshToken + '&client_id=' + oauthClientId + '&client_secret=' + oauthClientSecret;
     let res = await fetch(oauthUrl, {
         method: 'POST',
