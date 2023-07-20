@@ -68,15 +68,31 @@ app.get('/grantDenied', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'html', 'grantDenied.html'));
 })
 
-app.get('/', (req, res) => {
+app.get('/', (req, res) => async () => {
     if (!req.user) {
         return res.redirect(`/oauthSignin${req._parsedUrl.search ? req._parsedUrl.search : ""}`);
     } else {
         console.log("User: " + JSON.stringify(req.user));
+        await refreshAccessToken(req.user);
         return res.sendFile(path.join(__dirname, 'public', 'html', 'index.html'));
     }
 });
 
 app.use('/api', require('./api'));
+
+const refreshAccessToken = async (user) => {
+    const body = 'grant_type=refresh_token&refresh_token=' + user.refreshToken + '&client_id=' + oauthClientId + '&client_secret=' + oauthClientSecret;
+    console.log("In refresh token function. Body: " + body);
+    let res = await fetch(oauthUrl + "/oauth/token", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: body
+    });
+    let resJson = await res.json();
+    let txt = await res.text();
+    console.log("Refresh Token returned" + res.status + " JSON: " + JSON.stringify(resJson) + " text: " + txt);
+}
 
 module.exports = app;

@@ -17,29 +17,9 @@ module.exports = {
             const resp = await fetch(normalizedUrl, { headers: { Authorization: `Bearer ${req.user.accessToken}` }});
             const data = await resp.text();
             const contentType = resp.headers.get('Content-Type');
-            if (true) {
-                await refreshAccessToken(req.user);
-                await this.forwardRequestToOnshape(apiPath, req, res);
-                return;
-            }
             res.status(resp.status).contentType(contentType).send(data);
         } catch (err) {
             res.status(500).json({ error: err });
         }
     }
-}
-
-const refreshAccessToken = async(user) => {
-    const body = 'grant_type=refresh_token&refresh_token=' + user.refreshToken + '&client_id=' + oauthClientId + '&client_secret=' + oauthClientSecret;
-    console.log("In refresh token function. Body: " + body);
-    let res = await fetch(oauthUrl + "/oauth/token", {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: body
-    });
-    let resJson = await res.json();
-    let txt = await res.text();
-    console.log("Refresh Token returned" + res.status + " JSON: " + JSON.stringify(resJson) + " text: " + txt);
 }
