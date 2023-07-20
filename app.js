@@ -84,12 +84,12 @@ app.use('/api', require('./api'));
 const refreshAccessToken = async (user) => {
     const body = 'grant_type=refresh_token&refresh_token=' + user.refreshToken + '&client_id=' + config.oauthClientId + '&client_secret=' + config.oauthClientSecret;
     console.log("In refresh token function. Body: " + body);
-    let res = await fetch(config.oauthUrl + "/oauth/token", {
+    let res = await fetch(config.oauthUrl + "/oauth/token?" + body, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
         },
-        body: body
+        // body: body
     });
     let resJson = await res.json();
     let txt = await res.text();
