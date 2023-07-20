@@ -73,7 +73,8 @@ app.get('/', (req, res) => {
         return res.redirect(`/oauthSignin${req._parsedUrl.search ? req._parsedUrl.search : ""}`);
     } else {
         console.log("User: " + JSON.stringify(req.user));
-        refreshAccessToken(req.user).then(() => {
+        refreshAccessToken(req.user).then((tokenJson) => {
+            console.log("User global:" + user);
             return res.sendFile(path.join(__dirname, 'public', 'html', 'index.html'));
         });
     }
@@ -91,9 +92,7 @@ const refreshAccessToken = async (user) => {
         },
         body: body
     });
-    // let resJson = await res.json();
-    let txt = await res.text();
-    console.log("Refresh Token returned" + res.status + " text: " + txt);
+    return await res.json();
 }
 
 module.exports = app;
