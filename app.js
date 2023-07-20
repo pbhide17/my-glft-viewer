@@ -72,6 +72,7 @@ app.get('/', (req, res) => {
     if (!req.user) {
         return res.redirect(`/oauthSignin${req._parsedUrl.search ? req._parsedUrl.search : ""}`);
     } else {
+        console.log("User: " + JSON.stringify(req.user));
         return res.sendFile(path.join(__dirname, 'public', 'html', 'index.html'));
     }
 });
