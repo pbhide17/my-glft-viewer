@@ -74,8 +74,13 @@ app.get('/', (req, res) => {
     } else {
         console.log("User: " + JSON.stringify(req.user));
         refreshAccessToken(req.user).then((tokenJson) => {
-            console.log("User global:" + user);
-            return res.sendFile(path.join(__dirname, 'public', 'html', 'index.html'));
+            let usrObj = JSON.parse(JSON.stringify(req.user));
+            usrObj.accessToken = tokenJson.accessToken;
+            usrObj.refreshToken = tokenJson.refreshToken;
+            req.login(usrObj, () => {
+                console.log("User after login: " + JSON.stringify(req.user));
+                return res.sendFile(path.join(__dirname, 'public', 'html', 'index.html'));
+            });
         });
     }
 });
