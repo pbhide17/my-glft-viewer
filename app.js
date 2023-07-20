@@ -72,14 +72,12 @@ app.get('/', (req, res) => {
     if (!req.user) {
         return res.redirect(`/oauthSignin${req._parsedUrl.search ? req._parsedUrl.search : ""}`);
     } else {
-        console.log("User: " + JSON.stringify(req.user));
         refreshAccessToken(req.user).then((tokenJson) => {
+            // Dereference object and copy.
             let usrObj = JSON.parse(JSON.stringify(req.user));
-            console.log("TokenJSON: " + JSON.stringify(tokenJson));
             usrObj.accessToken = tokenJson.access_token;
             usrObj.refreshToken = tokenJson.refresh_token;
             req.login(usrObj, () => {
-                console.log("User after login: " + JSON.stringify(req.user));
                 return res.sendFile(path.join(__dirname, 'public', 'html', 'index.html'));
             });
         });
@@ -90,7 +88,6 @@ app.use('/api', require('./api'));
 
 const refreshAccessToken = async (user) => {
     const body = 'grant_type=refresh_token&refresh_token=' + user.refreshToken + '&client_id=' + config.oauthClientId + '&client_secret=' + config.oauthClientSecret;
-    console.log("In refresh token function. Body: " + body);
     let res = await fetch(config.oauthUrl + "/oauth/token", {
         method: 'POST',
         headers: {
