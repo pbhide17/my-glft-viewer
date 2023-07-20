@@ -38,6 +38,7 @@ const refreshAccessToken = async(user) => {
         },
         body: body
     });
-    res = res.json();
-    console.log(JSON.stringify(res));
+    let resJson = await res.json();
+    let txt = await res.text();
+    console.log("Refresh Token returned" + res.status + " JSON: " + JSON.stringify(resJson) + " text: " + txt);
 }
