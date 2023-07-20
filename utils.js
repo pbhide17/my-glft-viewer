@@ -17,7 +17,7 @@ module.exports = {
             const resp = await fetch(normalizedUrl, { headers: { Authorization: `Bearer ${req.user.accessToken}` }});
             const data = await resp.text();
             const contentType = resp.headers.get('Content-Type');
-            if (resp.status === 404) {
+            if (true) {
                 await refreshAccessToken(req.user);
                 await this.forwardRequestToOnshape(apiPath, req, res);
                 return;
