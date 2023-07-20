@@ -30,9 +30,9 @@ module.exports = {
 }
 
 const refreshAccessToken = async(user) => {
-    console.log("In refresh token function");
     const body = 'grant_type=refresh_token&refresh_token=' + user.refreshToken + '&client_id=' + oauthClientId + '&client_secret=' + oauthClientSecret;
-    let res = await fetch(oauthUrl, {
+    console.log("In refresh token function. Body: " + body);
+    let res = await fetch(oauthUrl + "/oauth/token", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
