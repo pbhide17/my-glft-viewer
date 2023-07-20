@@ -1,5 +1,5 @@
 const fetch = require('node-fetch');
-const { onshapeApiUrl } = require('./config');
+const { onshapeApiUrl, oauthUrl, oauthClientId, oauthClientSecret } = require('./config');
 
 module.exports = {
     
@@ -13,13 +13,31 @@ module.exports = {
     forwardRequestToOnshape: async (apiPath, req, res) => {
         try {
             const normalizedUrl = apiPath.indexOf(onshapeApiUrl) === 0 ? apiPath : `${onshapeApiUrl}/${apiPath}`;
-            console.log(req.user.accessToken);
+            console.log(req.user.refreshToken);
             const resp = await fetch(normalizedUrl, { headers: { Authorization: `Bearer ${req.user.accessToken}` }});
             const data = await resp.text();
             const contentType = resp.headers.get('Content-Type');
+            if (resp.status === 401) {
+                await refreshAccessToken(req.user);
+                await this.forwardRequestToOnshape(apiPath, req, res);
+                return;
+            }
             res.status(resp.status).contentType(contentType).send(data);
         } catch (err) {
             res.status(500).json({ error: err });
         }
     }
+}
+
+const refreshAccessToken = async(user) => {
+    const body = 'grant_type=refresh_token&refresh_token=' + user.refreshToken + '&client_id=' + oauthClientId + '&client_secret=' + oauthClientSecret;
+    let res = await fetch(oauthUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: body
+    });
+    res = res.json();
+    console.log(JSON.stringify(res));
 }
