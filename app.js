@@ -68,7 +68,7 @@ app.get('/grantDenied', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'html', 'grantDenied.html'));
 })
 
-app.get('/', (req, res) => async () => {
+app.get('/', async (req, res)  => {
     if (!req.user) {
         return res.redirect(`/oauthSignin${req._parsedUrl.search ? req._parsedUrl.search : ""}`);
     } else {
