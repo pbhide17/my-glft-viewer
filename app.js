@@ -75,6 +75,7 @@ app.get('/', (req, res) => {
         console.log("User: " + JSON.stringify(req.user));
         refreshAccessToken(req.user).then((tokenJson) => {
             let usrObj = JSON.parse(JSON.stringify(req.user));
+            console.log("TokenJSON: " + JSON.stringify(tokenJson));
             usrObj.accessToken = tokenJson.accessToken;
             usrObj.refreshToken = tokenJson.refreshToken;
             req.login(usrObj, () => {
