@@ -68,13 +68,14 @@ app.get('/grantDenied', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'html', 'grantDenied.html'));
 })
 
-app.get('/', async (req, res)  => {
+app.get('/', (req, res) => {
     if (!req.user) {
         return res.redirect(`/oauthSignin${req._parsedUrl.search ? req._parsedUrl.search : ""}`);
     } else {
         console.log("User: " + JSON.stringify(req.user));
-        await refreshAccessToken(req.user);
-        return res.sendFile(path.join(__dirname, 'public', 'html', 'index.html'));
+        refreshAccessToken(req.user).then(() => {
+            return res.sendFile(path.join(__dirname, 'public', 'html', 'index.html'));
+        });
     }
 });
 
