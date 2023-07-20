@@ -30,6 +30,7 @@ module.exports = {
 }
 
 const refreshAccessToken = async(user) => {
+    console/log("In refresh token function");
     const body = 'grant_type=refresh_token&refresh_token=' + user.refreshToken + '&client_id=' + oauthClientId + '&client_secret=' + oauthClientSecret;
     let res = await fetch(oauthUrl, {
         method: 'POST',
