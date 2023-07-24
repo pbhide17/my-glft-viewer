@@ -1,5 +1,5 @@
 const fetch = require('node-fetch');
-const { onshapeApiUrl, oauthUrl, oauthClientId, oauthClientSecret } = require('./config');
+const { onshapeApiUrl } = require('./config');
 
 module.exports = {
     
